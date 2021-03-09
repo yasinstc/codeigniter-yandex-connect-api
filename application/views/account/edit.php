@@ -16,7 +16,7 @@ $this->load->view('inc/header');
         if($sess_success):
             echo '<div class="alert alert-success">' . $sess_data['msg'] . '</div>';
         else:
-            echo '<div class="alert alert-danger">' . $sess_data['msg'] . '</div>';                
+            echo '<div class="alert alert-danger">' . $sess_data['msg'] . '</div>';
         endif;
     endif;
 
@@ -30,17 +30,17 @@ $this->load->view('inc/header');
         <div class="form-group row">
             <div class="col-12">
                 <label> Password </label>
-                <?php 
+                <?php
                 echo form_password("password", "", [
                     "class" => "form-control required"
                 ]);
                 ?>
             </div>
         </div>
-        
+
         <div class="form-group row">
             <div class="col-12">
-            <?php 
+            <?php
             echo form_submit("edit_account", "Update", [
                 "class" => "btn btn-primary b"
             ]);

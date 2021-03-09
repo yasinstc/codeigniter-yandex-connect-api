@@ -3,7 +3,7 @@ $this->load->view('inc/header');
 ?>
 
 <div class="col-12">
-    <?php    
+    <?php
     echo heading('List Of Organizations', 2, [
         'class' => 'mt-0 mb-3'
     ]);

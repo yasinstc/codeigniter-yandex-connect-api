@@ -1,51 +1,52 @@
 <?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Yandex_connect_model extends CI_Model
 {
-    protected $table = "yandex_connect";
+    protected $table = 'yandex_connect';
 
     public function get_all()
     {
-        $this->db->select("*");
+        $this->db->select('*');
         $this->db->from($this->table);
-        $this->db->order_by("id ASC");
+        $this->db->order_by('id ASC');
 
         $sql = $this->db->get();
 
-        if($sql->num_rows())
+        if ($sql->num_rows()) {
             return $sql->result();
-        else
+        } else {
             return false;
+        }
     }
-
 
     public function get_ID($id)
     {
-        $this->db->select("*");
+        $this->db->select('*');
         $this->db->from($this->table);
-        $this->db->where("id", $id);
-        $this->db->order_by("id ASC");
+        $this->db->where('id', $id);
+        $this->db->order_by('id ASC');
 
         $sql = $this->db->get();
 
-        if($sql->num_rows())
+        if ($sql->num_rows()) {
             return $sql->row();
-        else
+        } else {
             return false;
+        }
     }
-
 
     public function add($data)
     {
         $this->db->set($data);
         $add = $this->db->insert($this->table);
 
-        if($add)
+        if ($add) {
             return $this->db->insert_id();
-        else
+        } else {
             return false;
+        }
     }
-
 
     public function update($id, $data)
     {
@@ -54,12 +55,12 @@ class Yandex_connect_model extends CI_Model
 
         $update = $this->db->update($this->table);
 
-        if($update)
+        if ($update) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
-
 
     public function delete_ID($id)
     {
@@ -67,9 +68,10 @@ class Yandex_connect_model extends CI_Model
 
         $delete = $this->db->delete($this->table);
 
-        if($delete)
+        if ($delete) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
 }

@@ -12,7 +12,7 @@ $this->load->view('inc/header');
         echo anchor( base_url('yandex_connect/add_account/'.$organization_id), 'Add New Account', [
             'class' => 'btn btn-primary mb-3'
         ]);
-        
+
         if( $this->session->flashdata('data') ):
             $sess_success = $this->session->flashdata('success');
             $sess_data = $this->session->flashdata('data');
@@ -20,14 +20,14 @@ $this->load->view('inc/header');
             if($sess_success):
                 echo '<div class="alert alert-success">' . $sess_data['msg'] . '</div>';
             else:
-                echo '<div class="alert alert-danger">' . $sess_data['msg'] . '</div>';                
+                echo '<div class="alert alert-danger">' . $sess_data['msg'] . '</div>';
             endif;
         endif;
 
         $this->table->set_template([
             'table_open' => '<table class="table table-striped mt-3" width="100%">'
         ]);
-        
+
         $arr_th = [
             ['data' => 'E-Mail'],
             ['data' => 'Name'],

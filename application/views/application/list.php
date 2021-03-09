@@ -11,7 +11,7 @@ $this->load->view('inc/header');
     echo anchor( base_url('yandex_connect/add_application/'), 'Add New Application', [
         'class' => 'btn btn-primary mb-3'
     ]);
-    
+
     if( $this->session->flashdata('data') ):
         $sess_success = $this->session->flashdata('success');
         $sess_data = $this->session->flashdata('data');
@@ -19,14 +19,14 @@ $this->load->view('inc/header');
         if($sess_success):
             echo '<div class="alert alert-success">' . $sess_data['msg'] . '</div>';
         else:
-            echo '<div class="alert alert-danger">' . $sess_data['msg'] . '</div>';                
+            echo '<div class="alert alert-danger">' . $sess_data['msg'] . '</div>';
         endif;
     endif;
 
     $this->table->set_template([
         'table_open' => '<table class="table table-striped mt-3" width="100%">'
     ]);
-    
+
     $arr_th = [
         ['data' => 'ID'],
         ['data' => 'App Name'],
@@ -52,7 +52,7 @@ $this->load->view('inc/header');
             ]);
             $btn_Organizations = anchor( base_url('yandex_connect/list_organizations/'.$id), 'Organizations', [
                 'class' => 'btn btn-secondary btn-sm'
-            ]);            
+            ]);
             $btn_Edit = anchor( base_url('yandex_connect/edit_application/'.$id), 'Edit', [
                 'class' => 'btn btn-info btn-sm'
             ]);
@@ -64,7 +64,7 @@ $this->load->view('inc/header');
             $arr_td = [
                 ['data' => $id],
                 ['data' => $app_name],
-                ['data' => $access_token],                
+                ['data' => $access_token],
                 ['data' => $expire_date],
                 ['data' => $btn_getAccessToken],
                 ['data' => $access_token ? $btn_Organizations : '—'],

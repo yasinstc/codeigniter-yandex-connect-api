@@ -16,7 +16,7 @@ $this->load->view('inc/header');
         if($sess_success):
             echo '<div class="alert alert-success">' . $sess_data['msg'] . '</div>';
         else:
-            echo '<div class="alert alert-danger">' . $sess_data['msg'] . '</div>';                
+            echo '<div class="alert alert-danger">' . $sess_data['msg'] . '</div>';
         endif;
     endif;
 
@@ -30,19 +30,19 @@ $this->load->view('inc/header');
             <div class="col-12">
                 <label> New E-Mail (Username) </label>
                 <div class="input-group">
-                    <?php 
+                    <?php
                     echo form_input("nickname", set_value("nickname"), [
                         "class" => "form-control required"
-                    ]); 
+                    ]);
                     ?>
                 </div>
             </div>
         </div>
-			
+
         <div class="form-group row">
             <div class="col-6">
                 <label> First Name </label>
-                <?php 
+                <?php
                 echo form_input("name_first", set_value("name_first"), [
                     "class" => "form-control required"
                 ]);
@@ -51,28 +51,28 @@ $this->load->view('inc/header');
 
             <div class="col-6">
                 <label> Last Name </label>
-                <?php 
+                <?php
                 echo form_input("name_last", set_value("name_last"), [
                     "class" => "form-control required"
                 ]);
                 ?>
-            </div>				
+            </div>
         </div>
 
         <div class="form-group row">
             <div class="col-12">
                 <label> Password </label>
-                <?php 
+                <?php
                 echo form_password("password", "", [
                     "class" => "form-control required"
                 ]);
                 ?>
             </div>
         </div>
-        
+
         <div class="form-group row">
             <div class="col-12">
-            <?php 
+            <?php
             echo form_submit("add_account", "Save", [
                 "class" => "btn btn-primary b"
             ]);

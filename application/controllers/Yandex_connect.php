@@ -1,9 +1,8 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Yandex_connect extends CI_Controller 
+class Yandex_connect extends CI_Controller
 {
-    
     public function __construct()
     {
         parent::__construct();
@@ -14,7 +13,6 @@ class Yandex_connect extends CI_Controller
         $this->load->model('yandex_connect_model');
     }
 
-
     /**
      * List All Applications
      */
@@ -23,40 +21,37 @@ class Yandex_connect extends CI_Controller
         $applications = $this->yandex_connect_model->get_all();
 
         $this->load->view('application/list', [
-            'applications' => $applications
+            'applications' => $applications,
         ]);
     }
-
 
     /**
      * Show Add New Application Form
      */
     public function add_application()
     {
-        if($this->input->post('submit_application')):
+        if ($this->input->post('submit_application')):
             $this->post_add_application();
         endif;
 
         $this->load->view('application/add');
     }
 
-
     /**
      * Show Edit Application Form
      */
     public function edit_application($id)
     {
-        if($this->input->post('submit_application')):
+        if ($this->input->post('submit_application')):
             $this->post_edit_application();
         endif;
 
         $application = $this->yandex_connect_model->get_ID($id);
 
         $this->load->view('application/add', [
-            'application' => $application
+            'application' => $application,
         ]);
-    }    
-
+    }
 
     /**
      * Add New Application
@@ -65,14 +60,14 @@ class Yandex_connect extends CI_Controller
     {
         $this->form_validation->set_rules('app_name', 'App Name', 'trim|required');
         $this->form_validation->set_rules('app_id', 'App ID', 'trim|required');
-	$this->form_validation->set_rules('app_secret', 'App Secret', 'trim|required');
-        
-        if($this->form_validation->run() == FALSE):
+        $this->form_validation->set_rules('app_secret', 'App Secret', 'trim|required');
+
+        if ($this->form_validation->run() == false):
             $this->session->set_flashdata([
                 'success' => false,
                 'data' => [
-                    'msg' => validation_errors('<p class="mb-0">', '</p>')
-                ]
+                    'msg' => validation_errors('<p class="mb-0">', '</p>'),
+                ],
             ]);
 
             return false;
@@ -84,18 +79,17 @@ class Yandex_connect extends CI_Controller
 
         $add = $this->yandex_connect_model->add(compact('app_name', 'app_id', 'app_secret'));
 
-        if($add):
-            redirect( base_url('yandex_connect/list_applications') );
+        if ($add):
+            redirect(base_url('yandex_connect/list_applications'));
         else:
             $this->session->set_flashdata([
                 'success' => false,
                 'data' => [
-                    'msg' => 'Failed to add application, something went wrong'
-                ]
-            ]);            
+                    'msg' => 'Failed to add application, something went wrong',
+                ],
+            ]);
         endif;
     }
-
 
     /**
      * Edit Application
@@ -105,14 +99,14 @@ class Yandex_connect extends CI_Controller
         $this->form_validation->set_rules('id', 'ID', 'trim|required');
         $this->form_validation->set_rules('app_name', 'App Name', 'trim|required');
         $this->form_validation->set_rules('app_id', 'App ID', 'trim|required');
-	$this->form_validation->set_rules('app_secret', 'App Secret', 'trim|required');
-        
-        if($this->form_validation->run() == FALSE):
+        $this->form_validation->set_rules('app_secret', 'App Secret', 'trim|required');
+
+        if ($this->form_validation->run() == false):
             $this->session->set_flashdata([
                 'success' => false,
                 'data' => [
-                    'msg' => validation_errors('<p class="mb-0">', '</p>')
-                ]
+                    'msg' => validation_errors('<p class="mb-0">', '</p>'),
+                ],
             ]);
 
             return false;
@@ -125,45 +119,43 @@ class Yandex_connect extends CI_Controller
 
         $update = $this->yandex_connect_model->update($id, compact('app_name', 'app_id', 'app_secret'));
 
-        if($update):
-            redirect( base_url('yandex_connect/list_applications') );
+        if ($update):
+            redirect(base_url('yandex_connect/list_applications'));
         else:
             $this->session->set_flashdata([
                 'success' => false,
                 'data' => [
-                    'msg' => 'Failed to update application, something went wrong'
-                ]
-            ]);            
+                    'msg' => 'Failed to update application, something went wrong',
+                ],
+            ]);
         endif;
     }
-
 
     /**
      * Delete Application
      */
-    public function delete_application($id) 
-    {                
+    public function delete_application($id)
+    {
         $delete_application = $this->yandex_connect_model->delete_ID($id);
 
-        if($delete_application):
+        if ($delete_application):
             $this->session->set_flashdata([
                 'success' => true,
                 'data' => [
-                    'msg' => 'Application deleted'
-                ]
-            ]);            
+                    'msg' => 'Application deleted',
+                ],
+            ]);
         else:
             $this->session->set_flashdata([
                 'success' => false,
                 'data' => [
-                    'msg' => 'Failed to delete application, something went wrong'
-                ]
-            ]);            
+                    'msg' => 'Failed to delete application, something went wrong',
+                ],
+            ]);
         endif;
 
-        redirect( base_url('yandex_connect/list_applications') );
+        redirect(base_url('yandex_connect/list_applications'));
     }
-
 
     /**
      * Authorize For Access Token
@@ -182,17 +174,15 @@ class Yandex_connect extends CI_Controller
 
         $this->session->set_flashdata('app_id', $id);
 
-        redirect("https://oauth.yandex.com/authorize?".http_build_query($qs));
+        redirect('https://oauth.yandex.com/authorize?' . http_build_query($qs));
     }
-
 
     /**
      * Getting Access Token
      */
     public function get_access_token()
     {
-        if($this->input->get('code')):
-
+        if ($this->input->get('code')):
             $id = $this->session->flashdata('app_id');
 
             $data = $this->yandex_connect_model->get_ID($id);
@@ -201,7 +191,7 @@ class Yandex_connect extends CI_Controller
             $app_secret = $data->app_secret;
 
             $code = $this->input->get('code');
-            
+
             $query = [];
             $query['grant_type'] = 'authorization_code';
             $query['code'] = $code;
@@ -213,7 +203,7 @@ class Yandex_connect extends CI_Controller
             $result = $this->yandex_connect_library->get_access_token($query);
             $result = json_decode($result, false);
 
-            if($result->access_token):
+            if ($result->access_token):
                 $access_token = $result->access_token;
                 $refresh_token = $result->refresh_token;
                 $expires_in = $result->expires_in;
@@ -221,25 +211,26 @@ class Yandex_connect extends CI_Controller
                 $expire = time() + $expires_in;
                 $expire = date('Y-m-d H:i:s', $expire);
 
-                $this->db->set([
-                    "access_token" => $access_token,
-                    "refresh_token" => $refresh_token,
-                    "expires_in" => $expires_in,
-                    "expire_date" => $expire
-                ])->update("yandex_connect");
-                
+                $this->db
+                    ->set([
+                        'access_token' => $access_token,
+                        'refresh_token' => $refresh_token,
+                        'expires_in' => $expires_in,
+                        'expire_date' => $expire,
+                    ])
+                    ->update('yandex_connect');
+
                 $this->session->set_flashdata([
                     'success' => true,
                     'data' => [
-                        'msg' => 'Access Token Received'
-                    ]
+                        'msg' => 'Access Token Received',
+                    ],
                 ]);
 
-                redirect( base_url('yandex_connect/list_applications') );
-            endif;                      
+                redirect(base_url('yandex_connect/list_applications'));
+            endif;
         endif;
     }
-
 
     /**
      * Listing All Organizations
@@ -254,114 +245,111 @@ class Yandex_connect extends CI_Controller
          * Settings Access Token For E-Mai Actions
          */
         $this->session->set_userdata([
-            'access_token' => $access_token
+            'access_token' => $access_token,
         ]);
 
-	$header = [];
-	$header[] = 'Content-type: application/json';
-        $header[] = 'Authorization: OAuth '.$access_token;
-        
-	$query = [];
-	$query["fields"] = "domains";
+        $header = [];
+        $header[] = 'Content-type: application/json';
+        $header[] = 'Authorization: OAuth ' . $access_token;
+
+        $query = [];
+        $query['fields'] = 'domains';
         $query = http_build_query($query);
 
         $get_organizations = $this->yandex_connect_library->get_organizations($query, $header);
         $http_code = $get_organizations['http_code'];
         $result = $get_organizations['result'];
-        
-	$result = json_decode($result);
-		
-	if($http_code == 200):
+
+        $result = json_decode($result);
+
+        if ($http_code == 200):
             $success = true;
             $data = [
-                'result' => $result->result
+                'result' => $result->result,
             ];
         else:
             $success = false;
             $data = [
                 'http_code' => $http_code,
-                'message' => $result->message
+                'message' => $result->message,
             ];
         endif;
 
         $this->load->view('organization/list', [
-            'success' => $success, 
-            'data' => $data
+            'success' => $success,
+            'data' => $data,
         ]);
     }
 
     /**
      * Listing All Accounts In Selected Organization
      */
-	public function list_accounts($organization_id)
-	{
-        $header   	= [];
-	$header[] 	= 'Content-length: 0';
-	$header[] 	= 'Content-type: application/json';
-	$header[] 	= 'Authorization: OAuth '.$this->session->userdata('access_token');
-	$header[] 	= 'X-Org-ID: '.$organization_id;
-		
-	$query		= [];
-	$query["fields"] = "name,email,gender,created,position,contacts,is_robot,is_dismissed,is_admin";
-        
+    public function list_accounts($organization_id)
+    {
+        $header = [];
+        $header[] = 'Content-length: 0';
+        $header[] = 'Content-type: application/json';
+        $header[] = 'Authorization: OAuth ' . $this->session->userdata('access_token');
+        $header[] = 'X-Org-ID: ' . $organization_id;
+
+        $query = [];
+        $query['fields'] = 'name,email,gender,created,position,contacts,is_robot,is_dismissed,is_admin';
+
         $query = http_build_query($query);
-        
+
         $get_accounts = $this->yandex_connect_library->get_accounts($query, $header);
         $http_code = $get_accounts['http_code'];
         $result = $get_accounts['result'];
 
-	$result = json_decode($result, false);
-		
-	if($http_code == 200):
-		$data = [
-                	'success' => true,
-                	'organization_id' => $organization_id,
-                	'result' => $result
-		];
-	else:
-		$data = [
-			'success' => false,
-			'data' => [
-				'msg' => $result->message,
-				'code' => $result->code
-			]
-		];
+        $result = json_decode($result, false);
+
+        if ($http_code == 200):
+            $data = [
+                'success' => true,
+                'organization_id' => $organization_id,
+                'result' => $result,
+            ];
+        else:
+            $data = [
+                'success' => false,
+                'data' => [
+                    'msg' => $result->message,
+                    'code' => $result->code,
+                ],
+            ];
         endif;
-                
-	$this->load->view('account/list', $data);
+
+        $this->load->view('account/list', $data);
     }
-    
 
     /**
      * Show Add New Account Form
      */
     public function add_account($organization_id)
     {
-        if($this->input->post('add_account')):
+        if ($this->input->post('add_account')):
             $this->post_add_account();
         endif;
 
         $this->load->view('account/add', [
-            'organization_id' => $organization_id
-        ]);       
+            'organization_id' => $organization_id,
+        ]);
     }
-
 
     /**
      * Show Update Account Form
      */
     public function edit_account($organization_id, $id)
     {
-        if($this->input->post('edit_account')):
+        if ($this->input->post('edit_account')):
             $this->post_edit_account();
         endif;
 
         $this->load->view('account/edit', [
             'organization_id' => $organization_id,
-            'id' => $id
-        ]);        
-    }    
-
+            'id' => $id,
+        ]);
+    }
 
     /**
      * Adding New Account
@@ -370,15 +358,15 @@ class Yandex_connect extends CI_Controller
     {
         $this->form_validation->set_rules('nickname', 'Username', 'trim|required|min_length[3]');
         $this->form_validation->set_rules('name_first', 'First Name', 'trim|required|min_length[3]');
-	$this->form_validation->set_rules('name_last', 'Last Name', 'trim|required|min_length[3]');
-	$this->form_validation->set_rules('password', 'Password', 'trim|required|min_length[6]|max_length[20]');
-        
-        if($this->form_validation->run() == FALSE):
+        $this->form_validation->set_rules('name_last', 'Last Name', 'trim|required|min_length[3]');
+        $this->form_validation->set_rules('password', 'Password', 'trim|required|min_length[6]|max_length[20]');
+
+        if ($this->form_validation->run() == false):
             $this->session->set_flashdata([
                 'success' => false,
                 'data' => [
-                    'msg' => validation_errors('<p class="mb-0">', '</p>')
-                ]
+                    'msg' => validation_errors('<p class="mb-0">', '</p>'),
+                ],
             ]);
 
             return false;
@@ -389,46 +377,45 @@ class Yandex_connect extends CI_Controller
         $name_first = $this->input->post('name_first');
         $name_last = $this->input->post('name_last');
         $password = $this->input->post('password');
-        
-        $header   	= [];
-        $header[] 	= 'Content-type: application/json';
-        $header[] 	= 'Authorization: OAuth '.$this->session->userdata('access_token');
-        $header[] 	= 'X-Org-ID: '.$organization_id;
-        
+
+        $header = [];
+        $header[] = 'Content-type: application/json';
+        $header[] = 'Authorization: OAuth ' . $this->session->userdata('access_token');
+        $header[] = 'X-Org-ID: ' . $organization_id;
+
         $query = [];
-        $query["department_id"] = 1;
-        $query["nickname"] = $nickname;;
-        $query["password"] = $password;
-        $query["name"]["first"] = $name_first;
-        $query["name"]["last"] = $name_last;
+        $query['department_id'] = 1;
+        $query['nickname'] = $nickname;
+        $query['password'] = $password;
+        $query['name']['first'] = $name_first;
+        $query['name']['last'] = $name_last;
         $query = json_encode($query);
 
         $add_account = $this->yandex_connect_library->add_account($query, $header);
-        
+
         $http_code = $add_account['http_code'];
         $result = $add_account['result'];
 
         $result = json_decode($result, false);
-        
-        if($http_code == 201):
+
+        if ($http_code == 201):
             $this->session->set_flashdata([
                 'success' => true,
                 'data' => [
-                    'msg' => 'Adding new mail address'
-                ]
+                    'msg' => 'Adding new mail address',
+                ],
             ]);
 
-            redirect( base_url('yandex_connect/list_accounts/'.$organization_id) );			
+            redirect(base_url('yandex_connect/list_accounts/' . $organization_id));
         else:
             $this->session->set_flashdata([
                 'success' => false,
                 'data' => [
-                    'msg' => $result->message.", Http Code: ".$http_code
-                ]
+                    'msg' => $result->message . ', Http Code: ' . $http_code,
+                ],
             ]);
         endif;
     }
-
 
     /**
      * Updating Existing Account
@@ -437,12 +424,12 @@ class Yandex_connect extends CI_Controller
     {
         $this->form_validation->set_rules('password', 'Password', 'trim|required|min_length[6]|max_length[20]');
 
-        if($this->form_validation->run() == FALSE):
+        if ($this->form_validation->run() == false):
             $this->session->set_flashdata([
                 'success' => false,
                 'data' => [
-                    'msg' => validation_errors('<p class="mb-0">', '</p>')
-                ]
+                    'msg' => validation_errors('<p class="mb-0">', '</p>'),
+                ],
             ]);
 
             return false;
@@ -452,15 +439,15 @@ class Yandex_connect extends CI_Controller
         $id = $this->input->post('id');
         $password = $this->input->post('password');
 
-	$header   	= [];
-	$header[] 	= 'Content-type: application/json';
-	$header[] 	= 'Authorization: OAuth '.$this->session->userdata('access_token');
-	$header[] 	= 'X-Org-ID: '.$organization_id;
-			
-	$query = [];
-        $query["password"] = $password;
+        $header = [];
+        $header[] = 'Content-type: application/json';
+        $header[] = 'Authorization: OAuth ' . $this->session->userdata('access_token');
+        $header[] = 'X-Org-ID: ' . $organization_id;
+
+        $query = [];
+        $query['password'] = $password;
         $query = json_encode($query);
-        
+
         $update_account = $this->yandex_connect_library->update_account($id, $query, $header);
 
         $http_code = $update_account['http_code'];
@@ -468,21 +455,21 @@ class Yandex_connect extends CI_Controller
 
         $result = json_decode($result, false);
 
-        if($http_code == 200):
+        if ($http_code == 200):
             $this->session->set_flashdata([
                 'success' => true,
                 'data' => [
-                    'msg' => 'Password is updated'
-                ]
+                    'msg' => 'Password is updated',
+                ],
             ]);
 
-            redirect( base_url('yandex_connect/list_accounts/'.$organization_id) );	
+            redirect(base_url('yandex_connect/list_accounts/' . $organization_id));
         else:
             $this->session->set_flashdata([
                 'success' => false,
                 'data' => [
-                    'msg' => $result->message.", Http Code: ".$http_code
-                ]
+                    'msg' => $result->message . ', Http Code: ' . $http_code,
+                ],
             ]);
         endif;
     }
@@ -490,17 +477,17 @@ class Yandex_connect extends CI_Controller
     /**
      * Deleting Account
      */
-    public function delete_account($organization_id, $id) 
-    {        
-        $header   	= [];
-        $header[] 	= 'Content-type: application/json';
-        $header[] 	= 'Authorization: OAuth '.$this->session->userdata('access_token');
-        $header[] 	= 'X-Org-ID: '.$organization_id;
-        
-        $query		= [];
+    public function delete_account($organization_id, $id)
+    {
+        $header = [];
+        $header[] = 'Content-type: application/json';
+        $header[] = 'Authorization: OAuth ' . $this->session->userdata('access_token');
+        $header[] = 'X-Org-ID: ' . $organization_id;
+
+        $query = [];
         $query['is_dismissed'] = true;
         $query = json_encode($query);
-        
+
         $delete_account = $this->yandex_connect_library->delete_account($id, $query, $header);
 
         $http_code = $delete_account['http_code'];
@@ -508,22 +495,22 @@ class Yandex_connect extends CI_Controller
 
         $result = json_decode($result, false);
 
-        if($http_code == 200):
+        if ($http_code == 200):
             $this->session->set_flashdata([
                 'success' => true,
                 'data' => [
-                    'msg' => 'E-mail address deleted'
-                ]
-            ]);            
+                    'msg' => 'E-mail address deleted',
+                ],
+            ]);
         else:
             $this->session->set_flashdata([
                 'success' => false,
                 'data' => [
-                    'msg' => $result->message
-                ]
-            ]);            
+                    'msg' => $result->message,
+                ],
+            ]);
         endif;
 
-        redirect( base_url('yandex_connect/list_accounts/'.$organization_id) );
+        redirect(base_url('yandex_connect/list_accounts/' . $organization_id));
     }
 }
